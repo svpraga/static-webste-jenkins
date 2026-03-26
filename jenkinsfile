@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Cloning repository...'
+                checkout scm
+            }
+        }
+
+        stage('Copy Website Files') {
+            steps {
+                echo 'Copying website files to Nginx...'
+                sh 'cp -r * /home/ubuntu/website/'
+            }
+        }
+
+        stage('Verify') {
+            steps {
+                echo 'Verifying files are copied...'
+                sh 'ls -la /home/ubuntu/website/'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Website deployed successfully!'
+        }
+        failure {
+            echo '❌ Deployment failed!'
+        }
+    }
+}
